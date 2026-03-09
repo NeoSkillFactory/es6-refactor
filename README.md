@@ -2,28 +2,19 @@
 
 ![Audit](https://img.shields.io/badge/audit%3A%20PASS-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue) ![OpenClaw](https://img.shields.io/badge/OpenClaw-skill-orange)
 
-> A skill that automatically refactors JavaScript/TypeScript code to use modern ES6+ features and patterns.
+> Automatically refactor JavaScript/TypeScript code to use modern ES6+ patterns and features
 
-I don't see any previous context or what you were working on before. Could you tell me what task you'd like me to continue with? I can help with:
+## Description
 
-- Reading/writing files
-- Running commands
-- Managing sessions
-- Web searches
-- And more
+ES6 Refactor is a code transformation tool that automatically modernizes JavaScript and TypeScript codebases. It converts legacy patterns (var declarations, callbacks, CommonJS) to modern ES6+ equivalents (let/const, async/await, ES modules) while preserving functionality and improving readability.
 
-Just let me know what you need and I'll get started.
+The skill integrates seamlessly with OpenClaw agent workflows, providing both a CLI for direct use and an API for programmatic access. It's designed for developers who need to upgrade codebases quickly without manual refactoring, ensuring consistency and adherence to modern best practices.
 
-## OpenClaw Marketplace
+## GitHub
 
-This skill is available on [ClawHub](https://clawhub.ai) — the OpenClaw skill marketplace.
-Install it in any OpenClaw agent workspace with:
+Source code: [github.com/NeoSkillFactory/es6-refactor](https://github.com/NeoSkillFactory/es6-refactor)
 
-```bash
-clawhub install es6-refactor
-```
-
-**Recommended price when commercial:** $39
+**Price suggestion:** $39
 
 ## License
 
