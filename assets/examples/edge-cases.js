@@ -59,8 +59,8 @@ const strictFunctionES6 = (...args) => {
 // EDGE CASE 3: Function hoisting differences
 // ============================================
 // ES5 function declarations are hoisted
-var result1 =();
-function result1() { return 'hoisted'; }  // OK - hoisted
+var result1 = result1Fn();
+function result1Fn() { return 'hoisted'; }  // OK - hoisted
 
 // ES6: 'const' and 'let' are not hoisted (TDZ)
 // const result2 = result2();  // ReferenceError!
@@ -81,11 +81,11 @@ class MyClass {
 // EDGE CASE 4: Hexadecimal/octal literal changes
 // ============================================
 var oldHex = 0xFF;      // ES5: valid
-var oldOctal = 0755;    // ES5: valid (leading zero), but discouraged
+// var oldOctal = 0755;  // ES5: valid (leading zero), but discouraged - invalid in strict mode
 var legacyOctal = 0o755; // ES6: valid, explicit octal
 
 // Be careful with leading zeros in strict mode:
-'use strict';
+// 'use strict';
 // var strictOctal = 0755; // SyntaxError in ES5 strict mode
 var strictOctalES6 = 0o755; // OK
 
@@ -107,9 +107,9 @@ const objES6 = {
   let: 4       // 'let' is a keyword, must quote
 };
 
-// But 'default' and 'class' are now allowed as identifiers in many places:
-const class = 'my-class';  // Valid in ES6!
-const default = 'default value';  // Valid in ES6!
+// Note: 'class' and 'default' are reserved words and CANNOT be used as identifiers:
+// const class = 'my-class';  // SyntaxError!
+// const default = 'default value';  // SyntaxError!
 
 // ============================================
 // EDGE CASE 6: Prototype chain manipulation
@@ -159,8 +159,8 @@ class ChildES6 extends ParentES6 {
 // ============================================
 // EDGE CASE 7: getters/setters - descriptor vs syntax
 // ============================================
-var objES5 = {};
-Object.defineProperty(objES5, 'value', {
+var objGetterES5 = {};
+Object.defineProperty(objGetterES5, 'value', {
   get: function() {
     return this._value;
   },
@@ -172,7 +172,7 @@ Object.defineProperty(objES5, 'value', {
 });
 
 // ES6 class syntax:
-class ES6Class {
+class ES6GetterClass {
   constructor(initialValue) {
     this._value = initialValue;
   }
@@ -187,7 +187,7 @@ class ES6Class {
 }
 
 // Object literal shorthand:
-const objES6 = {
+const objGetterES6 = {
   _value: 0,
   get value() {
     return this._value;
@@ -263,11 +263,11 @@ var F = function() {};
 F.prototype = {constructor: F};
 
 // In ES6, class constructors don't need manual prototype setup:
-class ES6Class {
+class ES6ConstructorClass {
   constructor() {}
   // .prototype.constructor is automatically correct
 }
-console.log(ES6Class.prototype.constructor === ES6Class);  // true
+console.log(ES6ConstructorClass.prototype.constructor === ES6ConstructorClass);  // true
 
 // ============================================
 // EDGE CASE 12: JSON parsing edge cases

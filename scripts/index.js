@@ -14,22 +14,22 @@
 
 const path = require('path');
 
-function refactor(context) {
+async function refactor(context) {
   const { code, language = 'javascript', options = {} } = context;
-  
+
   let transformer;
   if (language === 'typescript' || language === 'ts') {
     transformer = require('./types');
     if (typeof transformer.refactorTypeScript !== 'function') {
       throw new Error('types module does not export a refactorTypeScript function');
     }
-    return transformer.refactorTypeScript(code, options);
+    return await transformer.refactorTypeScript(code, options);
   } else {
     transformer = require('./refactor');
     if (typeof transformer.refactorCode !== 'function') {
       throw new Error('refactor module does not export a refactorCode function');
     }
-    return transformer.refactorCode(code, options);
+    return await transformer.refactorCode(code, options);
   }
 }
 

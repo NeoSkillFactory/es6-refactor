@@ -367,9 +367,9 @@ var argsPrinter = function() {
 // ============================================
 
 // Test 51: Arguments with rest parameter shadow
-function(...args) {
+var restArgs = function(...args) {
   // Should not have 'arguments' after transformation
-}
+};
 
 // Test 52: Default parameter with undefined
 function defaultTest(value) {

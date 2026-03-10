@@ -13,12 +13,25 @@ const fs = require('fs');
 
 // Default built-in transformation rules
 const BUILT_IN_RULES = {
-  varToLet: {
+  varToConstLet: {
     visitor: {
       VariableDeclaration(path) {
-        if (path.node.kind === 'var') {
-          path.node.kind = 'let';
+        if (path.node.kind !== 'var') return;
+        // Check each declarator for reassignment
+        let isReassigned = false;
+        for (const declarator of path.node.declarations) {
+          if (!t.isIdentifier(declarator.id)) {
+            // Destructuring patterns - use let to be safe
+            isReassigned = true;
+            break;
+          }
+          const binding = path.scope.getBinding(declarator.id.name);
+          if (binding && binding.constantViolations.length > 0) {
+            isReassigned = true;
+            break;
+          }
         }
+        path.node.kind = isReassigned ? 'let' : 'const';
       }
     }
   },
@@ -97,6 +110,10 @@ const BUILT_IN_RULES = {
         const parts = flatten(path.node);
         if (parts.length === 0) return;
 
+        // Only convert if at least one part is a string literal (avoid converting numeric additions)
+        const hasString = parts.some(p => p.type === 'string');
+        if (!hasString) return;
+
         // Build template literal: alternating quasis and expressions
         let quasis = [];
         let expressions = [];
@@ -139,8 +156,11 @@ function loadPatternsFromFile() {
       return parsed;
     } else if (parsed.enabledRules && Array.isArray(parsed.enabledRules)) {
       return parsed.enabledRules;
+    } else if (parsed.patterns && typeof parsed.patterns === 'object') {
+      // patterns.json has { patterns: { ruleName: {...}, ... } } format
+      // Return null to use built-in rules (patterns.json is reference data, not rule config)
+      return null;
     } else {
-      console.warn('patterns.json format not recognized; using defaults');
       return null;
     }
   } catch (e) {
@@ -159,7 +179,7 @@ function getEnabledRules(overrides) {
   return Object.keys(BUILT_IN_RULES);
 }
 
-function refactorCode(code, options = {}) {
+async function refactorCode(code, options = {}) {
   const parserPlugins = options.parserPlugins || [];
 
   // Parse with Babel
@@ -201,7 +221,7 @@ function refactorCode(code, options = {}) {
     try {
       const prettier = require('prettier');
       const parser = parserPlugins.includes('typescript') ? 'typescript' : 'babel';
-      output = prettier.format(output, {
+      output = await prettier.format(output, {
         parser,
         semi: true,
         singleQuote: true,

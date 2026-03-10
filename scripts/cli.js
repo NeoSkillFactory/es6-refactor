@@ -63,7 +63,7 @@ async function run(argv = process.argv.slice(2)) {
         rules: options.rules ? options.rules.split(',').map(s => s.trim()) : undefined
       };
 
-      const result = refactor({ code, language, options: refactorOptions });
+      const result = await refactor({ code, language, options: refactorOptions });
 
       if (options.output) {
         fs.writeFileSync(options.output, result, 'utf8');
@@ -72,7 +72,7 @@ async function run(argv = process.argv.slice(2)) {
       }
     });
 
-  await program.parseAsync(argv);
+  await program.parseAsync(argv, { from: 'user' });
 }
 
 // If run directly (node scripts/cli.js), execute run()

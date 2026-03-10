@@ -31,14 +31,14 @@ function tsInterfaceToType(path) {
     }
   }
 
-  // Build TSObjectType from the property signatures
-  const objectType = t.tsObjectType(properties);
-  // Create a type alias: type <id> = <objectType>
-  const typeAlias = t.tsTypeAlias(node.id, node.typeParameters, objectType);
+  // Build TSTypeLiteral from the property signatures
+  const typeLiteral = t.tsTypeLiteral(properties);
+  // Create a type alias: type <id> = <typeLiteral>
+  const typeAlias = t.tsTypeAliasDeclaration(node.id, node.typeParameters, typeLiteral);
   path.replaceWith(typeAlias);
 }
 
-function refactorTypeScript(code, options = {}) {
+async function refactorTypeScript(code, options = {}) {
   // Ensure TypeScript parser plugin
   const parserPlugins = Array.isArray(options.parserPlugins) ? [...options.parserPlugins] : [];
   if (!parserPlugins.includes('typescript')) {
@@ -58,7 +58,7 @@ function refactorTypeScript(code, options = {}) {
   };
 
   // Use the common refactor engine with extra visitors
-  return refactorCode(code, {
+  return await refactorCode(code, {
     ...options,
     parserPlugins,
     extraVisitors

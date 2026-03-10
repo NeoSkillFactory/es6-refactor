@@ -200,10 +200,10 @@ const userWithTimestamp = withId({id: 1, name: 'Alice', email: 'alice@example.co
 // ============================================
 // EXAMPLE 8: Template String Types (TS 4.1+)
 // ============================================
-type EventName<E extends string> = `on${E[0].toUpperCase()}${E.slice(1)}`;
+type EventName<E extends string> = `on${Capitalize<E>}`;
 
 type ClickHandler = EventName<'click'>;  // "onClick"
-type MouseOverHandler = EventName<'mouseover'>;  // "onMouseOver"
+type MouseOverHandler = EventName<'mouseover'>;  // "onMouseover"
 
 // ============================================
 // EXAMPLE 9: Discriminated Unions for State Machines
