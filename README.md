@@ -14,8 +14,6 @@ The skill integrates seamlessly with OpenClaw agent workflows, providing both a 
 
 Source code: [github.com/NeoSkillFactory/es6-refactor](https://github.com/NeoSkillFactory/es6-refactor)
 
-**Price suggestion:** $39
-
 ## License
 
 MIT © NeoSkillFactory
